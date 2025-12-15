@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portafolio Estudiantil - Base de Datos I - 2IL-121</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --color-fondo: #0f172a;
+      --color-card: #111827;
+      --color-acento: #38bdf8;
+      --color-acento-suave: #1e293b;
+      --color-texto: #e5e7eb;
+      --color-texto-suave: #9ca3af;
+      --radius: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1d283a, #020617);
+      color: var(--color-texto);
+      line-height: 1.6;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--color-texto-suave);
+      font-size: 0.85rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    nav a:hover {
+      color: var(--color-texto);
+      border-color: rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 3rem;
+    }
+
+    section {
+      margin-top: 2.5rem;
+      scroll-margin-top: 4.5rem;
+    }
+
+    h1, h2, h3 { font-weight: 700; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-acento);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 2rem;
+      align-items: center;
+      margin-top: 1.75rem;
+    }
+
+    .hero-title {
+      font-size: clamp(1.9rem, 3vw, 2.4rem);
+      margin-bottom: 0.8rem;
+    }
+
+    .hero p {
+      color: var(--color-texto-suave);
+      font-size: 0.98rem;
+      max-width: 36rem;
+    }
+
+    .hero-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 0.25rem 0.75rem;
+      font-size: 0.78rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-texto-suave);
+    }
+
+    .hero-card {
+      background: radial-gradient(circle at top, #1f2937, #020617);
+      border-radius: 18px;
+      padding: 1.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 18px 55px rgba(15, 23, 42, 0.75);
+    }
+
+    .hero-card h3 { margin-bottom: 0.6rem; font-size: 1rem; }
+
+    .hero-list {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--color-texto-suave);
+    }
+
+    .hero-list li::before {
+      content: "•";
+      color: var(--color-acento);
+      margin-right: 0.4rem;
+    }
+
+    .section-header { margin-bottom: 0.8rem; }
+
+    .section-header h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .section-header p {
+      color: var(--color-texto-suave);
+      font-size: 0.9rem;
+    }
+
+    .grid { display: grid; gap: 1rem; }
+    .grid-2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+    .card {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.7);
+    }
+
+    .card h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+    .card .meta { font-size: 0.8rem; color: var(--color-texto-suave); margin-bottom: 0.4rem; }
+    .card p { font-size: 0.9rem; color: var(--color-texto-suave); }
+
+    .material-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: var(--color-texto);
+      background: var(--color-acento-suave);
+      border-radius: var(--radius);
+      padding: 0.7rem 0.9rem;
+      font-size: 0.88rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      margin-bottom: 0.5rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+
+    .material-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.7);
+      border-color: var(--color-acento);
+    }
+
+    .material-link span.meta { font-size: 0.78rem; color: var(--color-texto-suave); }
+
+    .subsection-title {
+      font-size: 0.95rem;
+      margin: 0.4rem 0 0.3rem;
+      font-weight: 600;
+      color: var(--color-texto);
+    }
+
+    /* Botón simple */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: 0.9rem;
+      text-decoration: none;
+      padding: 0.65rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: var(--color-texto);
+      background: rgba(30, 41, 59, 0.9);
+      transition: transform .15s ease, border-color .15s ease;
+      font-size: .9rem;
+    }
+    .btn:hover { transform: translateY(-1px); border-color: var(--color-acento); }
+
+    /* Galería */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.7rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #020617;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding-top: 60%;
+    }
+
+    .gallery-item img,
+    .gallery-item iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: none;
+    }
+
+    /* CLAVE: para que el clic no lo “secuestre” el iframe */
+    .gallery-item iframe { pointer-events: none; }
+
+    /* Overlay clickeable en todo el recuadro */
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .gallery-caption {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 0.45rem 0.55rem;
+      font-size: 0.78rem;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.98), transparent);
+      color: var(--color-texto);
+      z-index: 3;
+    }
+
+    /* Contacto */
+    dl {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.25rem 1.25rem;
+      font-size: 0.9rem;
+    }
+    dt { color: var(--color-texto-suave); }
+    dd { font-weight: 500; }
+
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    footer {
+      border-top: 1px solid rgba(148, 163, 184, 0.3);
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--color-texto-suave);
+      text-align: center;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 6, 23, 0.82);
+      z-index: 9999;
+      padding: 1rem;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-content {
+      max-width: min(1100px, 96vw);
+      max-height: 92vh;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 25px 80px rgba(0,0,0,0.65);
+      background: #020617;
+    }
+    .lightbox-content img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 92vh;
+      object-fit: contain;
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 14px;
+      right: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--color-texto);
+      padding: 0.5rem 0.7rem;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 10000;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; }
+      .nav { flex-direction: column; align-items: flex-start; }
+      nav ul { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="logo">Portafolio Estudiantil 2025 · Base de Datos I</div>
+      <nav>
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#actividades">Actividades</a></li>
+          <li><a href="#materiales">Materiales</a></li>
+          <li><a href="#evidencias">Evidencias</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li><a href="#acerca">Acerca / Créditos</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. INICIO -->
+    <section id="inicio">
+      <span class="tag">Inicio</span>
+      <div class="hero">
+        <div>
+          <div class="hero-highlight">
+            Portafolio del compendio del semestre · Base de datos relacional
+          </div>
+          <h1 class="hero-title">Portafolio Estudiantil – Base de Datos I</h1>
+          <p>
+            Este sitio reúne las <strong>actividades, evaluaciones, materiales y evidencias</strong>
+            realizadas durante el curso <strong>Base de Datos I</strong>, con énfasis en el diseño
+            y manejo de bases de datos relacionales. El propósito es documentar el proceso de aprendizaje
+            del grupo, desde las tareas iniciales hasta el proyecto final.
+          </p>
+
+          <!-- Video por OneDrive (en GitHub Pages no se reproduce confiable dentro de <video>) -->
+          <a class="btn" href="https://utpac-my.sharepoint.com/:v:/g/personal/jose_maldonado_utp_ac_pa/IQDWhrsrP1JFQ6Ay2vVLIqPnAc0xLmwXAJKI2ZQOjgYo7To?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=AIBiCq" target="_blank" rel="noopener">
+            ▶ Ver video de idea del proyecto (OneDrive)
+          </a>
+        </div>
+
+        <aside class="hero-card">
+          <h3>Resumen del curso</h3>
+          <ul class="hero-list">
+            <li><strong>Asignatura:</strong> Base de Datos I</li>
+            <li><strong>Carrera:</strong> Lic. Ing. Sistemas y Computación</li>
+            <li><strong>Grupo:</strong> 2IL-121</li>
+            <li><strong>Semestre:</strong> II Semestre 2025</li>
+            <li><strong>Docente:</strong> Yarisol Castillo</li>
+            <li><strong>Institución:</strong> UTP – Centro Regional de Chiriquí</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- 2. ACTIVIDADES -->
+    <section id="actividades">
+      <div class="section-header">
+        <span class="tag">Actividades</span>
+        <h2>Actividades del semestre</h2>
+        <p>
+          Actividades organizadas por tipo de trabajo, según la planificación de evaluación.
+          Cada elemento incluye título, fecha y breve descripción. Los archivos se abren desde OneDrive/SharePoint.
+        </p>
+      </div>
+
+      <div class="grid grid-2">
+        <!-- A) Tarea No.1 -->
+        <article class="card">
+          <h3>A) Tarea No. 1</h3>
+          <div class="meta">Cantidad de archivos: 1 · Formato: PDF</div>
+          <p>Ejercicios sobre conceptos básicos de bases de datos, modelos relacionales y terminología fundamental.</p>
+          <p class="subsection-title">Archivos</p>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQDuuUJiSCNZQpHmD1OReETeAXfhyNr5ogVyODRMC6o9ZqU?e=b5XhDA" target="_blank" rel="noopener">
+            <div>
+              <strong>Tarea No. 1 – Base de Datos I</strong><br />
+              <span class="meta">Fecha: 25/08/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <!-- B) Taller No.1 -->
+        <article class="card">
+          <h3>B) Taller No. 1</h3>
+          <div class="meta">Cantidad de archivos: 1 · Formato: PDF</div>
+          <p>Taller práctico orientado al diseño de tablas y relaciones (PK/FK) e integridad referencial.</p>
+          <p class="subsection-title">Archivos</p>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQDXGJoTV5aeT5imwm9cfTcAAaa0_w4Ebt1h8v2rvC_3las?e=JuoJzq" target="_blank" rel="noopener">
+            <div>
+              <strong>Taller No. 1 – Base de datos</strong><br />
+              <span class="meta">Fecha: 16/10/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <!-- C) Noticias -->
+        <article class="card">
+          <h3>C) Noticias</h3>
+          <div class="meta">Cantidad de archivos: 8 · Formato: PDF</div>
+          <p>Cada integrante elaboró dos noticias relacionadas con tecnología y bases de datos.</p>
+          <p class="subsection-title">Archivos por estudiante</p>
+
+          <!-- Alisson -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBNO1hTvcf-Q5ykCgrA49FnAQ1IpD1MTTkAYmF8TqfRo-M?e=QgarxD" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 1 – Alisson Montes</strong><br>
+              <span class="meta">Fecha: 01/09/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAqIIyrBEoKTYV1ypddNezRAV5T1fcU_cu957RrueEYClU?e=VyZRC8" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 2 – Alisson Montes</strong><br>
+              <span class="meta">Fecha: 08/10/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- Kenedy -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBuzn-e7OalTa19-AEkIh05Adyi41G3kYp5s3QPP_XBwB8?e=lDNwg5" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 1 – Kenedy Ortega</strong><br>
+              <span class="meta">Fecha: 08/09/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQA4YI-YMCz5SZacTgHTpQkIAXCp3ttQjJ3fP-Lzk877RP4?e=oyObew" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 2 – Kenedy Ortega</strong><br>
+              <span class="meta">Fecha: 07/11/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- Ernesto -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBRPJbP_FpVQrJQhfGi2WjDAfJG3fXlKYFA1_XEBe3B3Sg?e=u9m5r6" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 1 – Ernesto Lezcano</strong><br>
+              <span class="meta">Fecha: 27/08/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQCyUoc4HTzTRLyh1DyBKTK4AT6dvDcp9l5knUlBZleuJY4?e=DlAJha" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 2 – Ernesto Lezcano</strong><br>
+              <span class="meta">Fecha: 14/10/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- José -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQALOPYrTWddRYWQLLikyRhAASx_8YSrnIGpT3V6s1mN_vU?e=12ftZc" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 1 – José Maldonado</strong><br>
+              <span class="meta">Fecha: 12/09/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQA3ZaZ75_a7RYwCS66ZtI68AerwnvMrvQhKa6_t0jBj-QA?e=URNB3f" target="_blank" rel="noopener">
+            <div>
+              <strong>Noticia 2 – José Maldonado</strong><br>
+              <span class="meta">Fecha: 12/09/2025</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <!-- D) Parciales -->
+        <article class="card">
+          <h3>D) Parciales</h3>
+          <div class="meta">Cantidad de archivos: 12 · Formato: PDF</div>
+          <p>Tres parciales por integrante. Las fechas aplican para cada parcial de cada estudiante.</p>
+          <p class="subsection-title">Archivos por estudiante</p>
+
+          <!-- Alisson -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAVN5L7ZthrQ46rha4dnrLKAXuy5Wq-Wd33IZ2k41RyIsM?e=wIEQYh" target="_blank" rel="noopener">
+            <div><strong>Parcial 1 – Alisson Montes</strong><br><span class="meta">Fecha: 08/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQCDjlPcnztyTJNfgmL8qED_ASGnSrPCac7hS_ZkKbGv28E?e=9geYgE" target="_blank" rel="noopener">
+            <div><strong>Parcial 2 – Alisson Montes</strong><br><span class="meta">Fecha: 27/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQB5e6-M5fYGQrn6MyzcwvkQAfYF72DVEbgDcAfd1MEom4k?e=jak9vo" target="_blank" rel="noopener">
+            <div><strong>Parcial 3 – Alisson Montes</strong><br><span class="meta">Fecha: 03/12/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- Kenedy -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAsaXrQLGSdRb-ZC6Y6vhZpAX79zREKHwgXhr_e85Veb-0?e=CHsMaS" target="_blank" rel="noopener">
+            <div><strong>Parcial 1 – Kenedy Ortega</strong><br><span class="meta">Fecha: 08/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQDfdb7rfmQ6R78jnPfOm74RAdhk3IgMi1AZuXIi_ha__-E?e=acckO6" target="_blank" rel="noopener">
+            <div><strong>Parcial 2 – Kenedy Ortega</strong><br><span class="meta">Fecha: 27/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQCaDowTlJE0TI8kDbCUVwgHAe7xZv_uz1Cgh_Db72RrHQY?e=iSYNAL" target="_blank" rel="noopener">
+            <div><strong>Parcial 3 – Kenedy Ortega</strong><br><span class="meta">Fecha: 03/12/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- Ernesto -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQD6we7BteIgSquqSXavewwbATt9Hw9X0NeGKuT8z6CZx5s?e=60U4Pk" target="_blank" rel="noopener">
+            <div><strong>Parcial 1 – Ernesto Lezcano</strong><br><span class="meta">Fecha: 08/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQDtuYWGqU0_TpEgONPCQBLdAXbejjrWpB5EyTMH7OX3UbM?e=6dxpY7" target="_blank" rel="noopener">
+            <div><strong>Parcial 2 – Ernesto Lezcano</strong><br><span class="meta">Fecha: 27/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBbacuIqH6fRJa1b7FIBB0CAWru_gbbpJfUZrQqGOG4GXQ?e=iSOTWg" target="_blank" rel="noopener">
+            <div><strong>Parcial 3 – Ernesto Lezcano</strong><br><span class="meta">Fecha: 03/12/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <!-- José -->
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAl-eqc2pvgS6fg4MZK0UCcAX79m2m88nmviRGbBOfaJl4?e=Vbtdc6" target="_blank" rel="noopener">
+            <div><strong>Parcial 1 – José Maldonado</strong><br><span class="meta">Fecha: 08/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAFKr1TaGgXRaNIdfzO_OrWAY5LxmUtf1bpDoLG-13YAu8?e=JdCgjE" target="_blank" rel="noopener">
+            <div><strong>Parcial 2 – José Maldonado</strong><br><span class="meta">Fecha: 27/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQA7VeiMSolrR5ubNREroxXJAZGvQ-16dESuE3I-OdQIvok?e=bZ3x0E" target="_blank" rel="noopener">
+            <div><strong>Parcial 3 – José Maldonado</strong><br><span class="meta">Fecha: 03/12/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <!-- E) Laboratorios iniciales -->
+        <article class="card">
+          <h3>E) Laboratorios Iniciales</h3>
+          <div class="meta">Cantidad de archivos: 3 · Formato: PDF</div>
+          <p>Laboratorios introductorios previos al uso de SQL Server.</p>
+          <p class="subsection-title">Archivos</p>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQC0Dd0qloZyQ4KaNYhY6dGsAaOd-7UFQO7j0eBkcu8ST4k?e=7eleo3" target="_blank" rel="noopener">
+            <div><strong>Laboratorio Inicial 1</strong><br><span class="meta">Fecha: 27/08/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAqrzFULkHNQpbieanFSHDmAT7MLUgETmeH-_ONP_1-jSg?e=lN0ygN" target="_blank" rel="noopener">
+            <div><strong>Laboratorio Inicial 2</strong><br><span class="meta">Fecha: 03/09/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQDWIyhIX2ENQpLrriUHNFeiAbrB6s85z1UxCVcsOyCclto?e=SVhQfL" target="_blank" rel="noopener">
+            <div><strong>Laboratorio Inicial 3</strong><br><span class="meta">Fecha: 10/09/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <!-- F) Laboratorios SQL Server -->
+        <article class="card">
+          <h3>F) Laboratorios con SQL Server</h3>
+          <div class="meta">Cantidad de archivos: 6 · Formato: PDF</div>
+          <p>Laboratorios prácticos de creación de BD, consultas SQL, CRUD y relaciones (PK/FK).</p>
+          <p class="subsection-title">Archivos</p>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBvLBGQ8yT1SpGlne7QaQinAVh0Phuye6Ybo0FmUrWt65I?e=T9jjnm" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 1</strong><br><span class="meta">Fecha: 08/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQATbJSSBeIYQ7Xa7NByr7HmAYWBewYdyk7hOk6GoOQ1P48?e=8gUue7" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 2</strong><br><span class="meta">Fecha: 13/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQD2VTSdQKQ9QJ9zFTjkdPs1ATFadYYblt6pNgaOnvICmHM?e=xdLJg0" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 3</strong><br><span class="meta">Fecha: 15/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAYpteNU9onT6nLbeeHVgQ9AUUEsEMGa1Zbpmf3j9BIFr0?e=Pwd8zd" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 4</strong><br><span class="meta">Fecha: 22/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQCC4BEJ8xBJSoQubKP-xblWARUJ3rNL1000Ib6XdZaQI8g?e=aIZj3Q" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 5</strong><br><span class="meta">Fecha: 22/10/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQCg3cEopTcvSqhLWoo6hTjJASd-cU8HewMAWco62xw2yuE?e=cYrnAB" target="_blank" rel="noopener">
+            <div><strong>Laboratorio SQL Server 6</strong><br><span class="meta">Fecha: 19/11/2025</span></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 3. MATERIALES -->
+    <section id="materiales">
+      <div class="section-header">
+        <span class="tag">Materiales</span>
+        <h2>Materiales del curso</h2>
+        <p>Plan de contenido, presentación del curso y enlaces de apoyo.</p>
+      </div>
+
+      <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAB6nKwvOXmSqN7gqJUkI_6ASNu5g1hxjBFGqtDI7arpG8?e=yLJhUQ" target="_blank" rel="noopener">
+        <div>
+          <strong>Plan de contenido del curso</strong><br />
+          <span class="meta">Planificación de temas y evaluaciones</span>
+        </div>
+        <span class="meta">Ver PDF</span>
+      </a>
+
+      <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBSOsONiszMQ5UC32eQeKHtASSlcTgD70GPrTIYT5emLKM?e=Rc5MXl" target="_blank" rel="noopener">
+        <div>
+          <strong>Presentación del curso</strong><br />
+          <span class="meta">Diapositivas/guía del curso</span>
+        </div>
+        <span class="meta">Ver PDF</span>
+      </a>
+
+      <a class="material-link" href="https://www.microsoft.com/es-es/sql-server/sql-server-downloads" target="_blank" rel="noopener">
+        <div>
+          <strong>Descarga de Microsoft SQL Server</strong><br />
+          <span class="meta">Sitio oficial para instalación y recursos</span>
+        </div>
+        <span class="meta">Abrir enlace</span>
+      </a>
+
+      <a class="material-link" href="https://www.canva.com/design/DAGygcfdN54/Yf4Z0ALupt8SmRrPDL7vng/edit?utm_content=DAGygcfdN54&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton" target="_blank" rel="noopener">
+        <div>
+          <strong>Canvas – Microsoft SQL Server</strong><br />
+          <span class="meta">Material de apoyo</span>
+        </div>
+        <span class="meta">Abrir Canvas</span>
+      </a>
+    </section>
+
+    <!-- 4. EVIDENCIAS / GALERÍA -->
+    <section id="evidencias">
+      <div class="section-header">
+        <span class="tag">Evidencias</span>
+        <h2>Evidencias y galería</h2>
+        <p>
+          Capturas, diagramas y recursos del curso. Las imágenes se pueden ampliar al hacer clic.
+        </p>
+      </div>
+
+      <div class="gallery">
+        <!-- 1) Vista previa PDF presentación del curso (clic abre PDF) -->
+        <div class="gallery-item">
+          <iframe src="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBSOsONiszMQ5UC32eQeKHtASSlcTgD70GPrTIYT5emLKM?e=Rc5MXl"></iframe>
+          <a class="gallery-overlay" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBSOsONiszMQ5UC32eQeKHtASSlcTgD70GPrTIYT5emLKM?e=Rc5MXl" target="_blank" rel="noopener"></a>
+          <div class="gallery-caption">Presentación del curso (abrir PDF)</div>
+        </div>
+
+        <!-- 2) Biografía del grupo -->
+        <div class="gallery-item">
+          <img src="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQDDrg9lR3usQoh4a6VLK-9RAbQLIF2nc09vJSLRTQ_MaEM?e=ktdIEM" alt="Biografía del grupo" class="js-zoom" />
+          <a class="gallery-overlay js-zoom-link" href="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQDDrg9lR3usQoh4a6VLK-9RAbQLIF2nc09vJSLRTQ_MaEM?e=ktdIEM" data-title="Biografía del grupo"></a>
+          <div class="gallery-caption">Biografía del grupo</div>
+        </div>
+
+        <!-- 3) Diagrama ER de SGBD -->
+        <div class="gallery-item">
+          <img src="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQDhen_k7WppRpsAKcOS7F0UAVdgAsCSnwCDEK04uSjCo1k?e=gVaxZs" alt="Diagrama ER de SGBD" class="js-zoom" />
+          <a class="gallery-overlay js-zoom-link" href="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQDhen_k7WppRpsAKcOS7F0UAVdgAsCSnwCDEK04uSjCo1k?e=gVaxZs" data-title="Diagrama ER de SGBD"></a>
+          <div class="gallery-caption">Diagrama ER de SGBD</div>
+        </div>
+
+        <!-- 4) Diagrama entidad-relación -->
+        <div class="gallery-item">
+          <img src="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQApltX-BVcvQIswtF4slmPwAdK3_jDgD3r0C3oND-rxsgM?e=RMjWxx" alt="Diagrama entidad-relación" class="js-zoom" />
+          <a class="gallery-overlay js-zoom-link" href="https://utpac-my.sharepoint.com/:i:/g/personal/jose_maldonado_utp_ac_pa/IQApltX-BVcvQIswtF4slmPwAdK3_jDgD3r0C3oND-rxsgM?e=RMjWxx" data-title="Diagrama entidad-relación"></a>
+          <div class="gallery-caption">Diagrama entidad-relación</div>
+        </div>
+      </div>
+
+      <p class="subsection-title" style="margin-top:1rem;">Ejercicio en clase</p>
+      <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBztFhkaB3aRqhIzEdL0zUgAYhFC6VH6W3xoy7ujUWVV8o?e=n1JBoU" target="_blank" rel="noopener">
+        <div>
+          <strong>Ejercicios en clase</strong><br />
+          <span class="meta">Archivo PDF con el desarrollo trabajado en aula</span>
+        </div>
+        <span class="meta">Ver PDF</span>
+      </a>
+    </section>
+
+    <!-- 5. PROYECTOS -->
+    <section id="proyectos">
+      <div class="section-header">
+        <span class="tag">Proyectos</span>
+        <h2>Proyectos destacados</h2>
+        <p>Proyecto final del curso: informe y presentación.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <article class="card">
+          <h3>Proyecto final – Sistema de Base de Datos</h3>
+          <div class="meta">Integrantes: Alisson Montes, Kenedy Ortega, Ernesto Lezcano, José Maldonado</div>
+          <p>Diseño e implementación de una base de datos relacional (ER, normalización y consultas SQL).</p>
+          <p class="subsection-title">Informe escrito</p>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQAR9RX0RmH-Q58-wb0IhdkNAeMNSnBw1qZ9QeFEoNyYLmw?e=JIvdPL" target="_blank" rel="noopener">
+            <div>
+              <strong>Informe del proyecto final</strong><br />
+              <span class="meta">Documento técnico con objetivos, metodología y resultados</span>
+            </div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+
+        <article class="card">
+          <h3>Presentación del proyecto en clase</h3>
+          <div class="meta">Formato: PDF</div>
+          <p>Diapositivas usadas para exponer el proyecto, consultas y conclusiones.</p>
+          <p class="subsection-title">Diapositivas</p>
+          <a class="material-link" href="https://utpac-my.sharepoint.com/:b:/g/personal/jose_maldonado_utp_ac_pa/IQBmWBNBWiN9T7TV-tofwwNiAfKE5rZY1ULBHuX4BakROQI?e=uJA1vL" target="_blank" rel="noopener">
+            <div><strong>Presentación Proyecto Final</strong></div>
+            <span class="meta">Ver PDF</span>
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. CONTACTO -->
+    <section id="contacto">
+      <div class="section-header">
+        <span class="tag">Contacto</span>
+        <h2>Información del curso y del grupo</h2>
+        <p>Datos generales del curso y del grupo responsable del portafolio.</p>
+      </div>
+
+      <div class="card">
+        <dl>
+          <dt>Asignatura</dt><dd>Base de Datos I</dd>
+          <dt>Carrera</dt><dd>Licenciatura en Ingeniería de Sistemas y Computación</dd>
+          <dt>Grupo</dt><dd>2IL-121</dd>
+          <dt>Docente</dt><dd>Yarisol Castillo</dd>
+          <dt>Semestre</dt><dd>Segundo Semestre 2025</dd>
+          <dt>Institución</dt><dd>Universidad Tecnológica de Panamá – Centro Regional de Chiriquí</dd>
+          <dt>Estudiantes</dt>
+          <dd>
+            Alisson Montes – Cédula: 4-829-2094<br />
+            Kenedy Ortega – Cédula: 2-756-1031<br />
+            Ernesto Lezcano – Cédula: 4-825-1534<br />
+            José Maldonado – Cédula: 4-831-1204
+          </dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- 7. ACERCA -->
+    <section id="acerca">
+      <div class="section-header">
+        <span class="tag">Documentación</span>
+        <h2>Acerca del sitio, créditos y tecnologías utilizadas</h2>
+        <p>Cómo se construyó el portafolio y herramientas usadas durante el semestre.</p>
+      </div>
+
+      <div class="columns">
+        <div class="card">
+          <h3>Acerca del sitio</h3>
+          <p>
+            Este portafolio fue elaborado como requisito de evaluación del curso Base de Datos I.
+            Su objetivo es organizar en un solo lugar actividades, materiales y evidencias del semestre.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Créditos</h3>
+          <p>
+            El contenido académico fue desarrollado por los estudiantes del grupo 2IL-121.
+            La estructura del sitio fue diseñada para facilitar la revisión y descarga de evidencias.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Tecnologías utilizadas</h3>
+          <ul class="hero-list">
+            <li>HTML5 para estructura del contenido.</li>
+            <li>CSS3 para diseño y organización visual.</li>
+            <li>GitHub Pages para publicar la página.</li>
+            <li>OneDrive/SharePoint para alojar PDFs, imágenes y videos.</li>
+            <li>Microsoft SQL Server como herramienta de práctica.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Portafolio Estudiantil · Base de Datos I · Grupo 2IL-121 · II Semestre 2025
+    </footer>
+  </main>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose">Cerrar ✕</button>
+    <div class="lightbox-content">
+      <img id="lightboxImg" alt="Vista ampliada" />
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const lb = document.getElementById("lightbox");
+      const lbImg = document.getElementById("lightboxImg");
+      const lbClose = document.getElementById("lightboxClose");
+
+      function openLightbox(src) {
+        lbImg.src = src;
+        lb.classList.add("open");
+        lb.setAttribute("aria-hidden", "false");
+      }
+
+      function closeLightbox() {
+        lb.classList.remove("open");
+        lb.setAttribute("aria-hidden", "true");
+        lbImg.src = "";
+      }
+
+      document.querySelectorAll(".js-zoom-link").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const src = a.getAttribute("href");
+          openLightbox(src);
+        });
+      });
+
+      lb.addEventListener("click", (e) => {
+        if (e.target === lb) closeLightbox();
+      });
+
+      lbClose.addEventListener("click", closeLightbox);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+    })();
+  </script>
+</body>
+</html>
